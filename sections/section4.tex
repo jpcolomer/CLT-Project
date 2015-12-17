@@ -111,4 +111,47 @@ with $x_1$ and $x_2$, there are instances in which a KWIK algorithm can
 have enough information for returning valid answers before having learned the
 target concept.
 
+\paragraph{Algorithm 4: Coin-Learning Algorithm}
+We will now consider a simple KWIK algorithm which learns the probability of a
+biased coin to come up heads. This algorithm will receive Bernoulli observations
+($0$ when the coin comes up tails and $1$ when it comes up heads) and, with a
+KWIK bound of $B(\varepsilon, \delta) = O(frac{1}{\varepsilon^2}\log \frac{1}{\delta})$, it learns the
+bias $p$ of the coin with $\varepsilon$-accuracy with probability at least $1-\delta$.
 
+Let $\hat{p}$ be the estimate of $p$ made by the algorithm. It wants to estimate
+the probability so that $|\hat{p} - p| \leq \varepsilon$.
+
+
+Let $T$ be the number of observations it needs in order to satisfy the $\varepsilon$ and $\delta$ requirements.
+Let $z_i$ be the $i$-th observation received by the algorithm.
+
+\begin{itemize}
+  \item If $i < T$ the algorithm can't guarantee that it will
+  output an $\varepsilon$-accurate estimate with confidence $1-\delta$.
+  \item Otherwise it calculates and outputs $\hat{p} = \frac{1}{T}\sum_{t=1}^{T}z_t$.
+\end{itemize}
+$T$ can be calculated by using a Hoeffding bound
+\begin{eqnarray*}
+  Pr[\hat{p} - p \geq \varepsilon] &\leq&  e^{-2T\varepsilon^2} \leq \delta/2 \\
+  e^{-2T\varepsilon^2} &\leq& \delta/2 \\
+  \Rightarrow T &\geq& \frac{1}{2\varepsilon^2}\ln \frac{2}{\delta}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+  Pr[\hat{p} - p \leq -\varepsilon] &\leq&  e^{-2T\varepsilon^2} \leq \delta/2 \\
+  e^{-2T\varepsilon^2} &\leq& \delta/2 \\
+  \Rightarrow T &\geq& \frac{1}{2\varepsilon^2}\ln \frac{2}{\delta}
+\end{eqnarray*}
+
+If $T = \frac{1}{2\varepsilon^2}\ln \frac{2}{\delta}$, with probability at least
+$1 - \delta$, the algorithm will return an estimate $\hat{p}$ such that
+$|\hat{p} - p| \leq \varepsilon$.
+
+\paragraph{Algorithm 5: Noisy Linear-Regression Algorithm}
+In section 3, we saw an algorithm for learning a weight vector $w$ such that
+$f(x) = w \cdot x \ \forall x \in X$. In that case, what we observed was the
+true value of $w \cdot x$. However, in the presence of additive noise, we don't
+observe the true value, instead, we receive $w \cdot x + \eta$, with $\eta$
+being the noise. This problem was solved by Stehl and Littman (2008)
+\cite{Strehl}. The KWIK bound for this algorithm is $B(\varepsilon, \delta) =
+O\left( \frac{d^3}{\varepsilon^4} \right)$, where $w \in \mathbb{R}^d$.
