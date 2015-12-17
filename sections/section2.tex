@@ -1,18 +1,3 @@
-%sample space $X$
-%output space $Y$
-%concept class $C$
-%hypothesis class $H$
-%target concept $c$
-%hypothesis $h$
-%$H \subseteq (X \to Y)$
-%$c \in C$
-%$h \in H$
-%$C = H$ (proper)
-Let $c: X \rightarrow Y$ be a concept that belongs to a concept class $C$ known by the algorithm.
-A KWIK algorithm is an algorithm that learns $c$ given examples from $X$ labeled by $c(x) \in Y$. The output of the algorithm is a hypothesis $h \in H$ with $H$ the hypothesis class that is known by the algorithm.
-
-KWIK assumes that $H=C$.
-
 A KWIK algorithm is an algorithm that, given a concept class $C$, parameters $(\varepsilon, \delta)$,  receives examples $x \in X$ that have been labeled by a target concept $c \in C$, it learns $c$.
 
 A run for a KWIK algorithm works as follows.
@@ -26,3 +11,14 @@ A run for a KWIK algorithm works as follows.
 \end{enumerate}
 
 The probability of having a failed run must be upper bounded by $\delta$. Additionally, the total number of $\bot$ responses is upper bounded by $B(\varepsilon,\delta)=\text{poly}(1/\varepsilon,1/\delta)$.
+
+KWIK framework has similarities with both $PAC$ and $OLMB$ models.
+\begin{itemize}
+  \item Similarly to PAC, KWIK algorithms must be $\varepsilon$-accurate with probability at least $1-\delta$. Nevertheless, inputs for the KWIK model come from an adversiary instead of a distribution like in PAC.
+  \item In the same way KWIK relates to OLMB in the sense that inputs for both models are picked adversarially. However, instead of having a bound on the number of mistakes, KWIK has a bound on the number of $\bot$ outputs.
+\end{itemize}
+
+A KWIK algorithm can be easily converted into a OLMB algorithm by guessing a label instead of $\bot$. In this case, the resulting OLMB algorithm will have a mistake bound $B(\varepsilon,\delta)$.\\
+
+Moreover, we saw in class that any OLMB algorithm can be used in order to construct a PAC algorithm. Therefore, any KWIK algorithm can be used to construct a PAC algorithm.
+
