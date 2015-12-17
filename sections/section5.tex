@@ -47,8 +47,31 @@ $$ B(\varepsilon, \delta) = (k - 1) + \sum_{i = 1}^k B_i(\varepsilon, \delta) $$
 Let:
 \begin{itemize}
   \item $X = Y = \mathbb{R}$
-  \item $H_1 = \{ f \ | \ f(x) = \abs{x - c}, c \in \mathbb{R} \}$
-  \item $H_2 = \
+  \item $H_1 = \{ f \ | \ f(x) =|x - c|, c \in \mathbb{R} \}$ KWIK learnable by $A_1_$
+  \item $H_2 = \{ f \ | \ f(x) = mx + b, m \in \mathbb{R}, b \in \mathbb{R} \}$ KWIK learnable by $A_2$
+  \item $H = H_1 \cup H_2$
 \end{itemize}
 
-\paragraph{Algorithm 7: }
+$H_1$ can be learned using a 1 dimension version of Planar-distance Algorithm (Algorithm 3) with a 
+KWIK bound of 2. $H_2$ can be learned with a KWIK bound of $2$,
+the number of points needed to define a line.
+$H$ is KWIK learnable using the union algorithm.
+\begin{enumerate}
+  \item Initially, $\hat{A} = \{A_1, A_2 \}$
+  \item First, the algorithm receives $x_1 = 2$. $\hat{L} = \{ \bot \}$ because none of the algorithms knows the answer. Then, it outputs $\bot$ and receives $y_1 = 2$, which it passes to $A_1$, $A_2$.
+  \item The algorithm receives $x_2 = 8$. $A_1$ and $A_2$ still don't know the actual value. Therefore, $\hat{L} = \{ \bot \}$ and it outputs $\bot$. Afterwards, it receives and passes $y_2 = 4$ to $A_1$ and $A_2$.
+    Since $A_1$ and $A_2$ have returned $\bot$ twice, they have learned an hypothesis for every $x \in \mathbb{R}$.
+    \begin{itemize}
+      \item $A_1$ knows that $c = 4$. Because it's the only point that has a distance of $2$ from $x_1=2$ and 4 from $x_2 = 8$.
+      \item $A_2$ learns the line that connects $(x_1, y_1)$ and $(x_2, y_2)$. Therefore, $m = 1/3$ and $b = 4/3$.
+    \end{itemize}
+  \item The algorithm receives $x_3 = 1$. $\hat{L} = \{ 3, 5/3 \}$
+    \begin{itemize}
+      \item $A_1$ predicts $3$
+      \item $A_2$ predicts $5/3$
+    \end{itemize}
+    It returns $\bot$ because $A_1$ and $A_2$ disagree. Then it receives $y_3 = 3$ and eliminates algorithm $A_2$.
+    From now on the algorithm will predict all the examples using $A_1$.
+\end{enumerate}
+
+\paragraph{Algorithm 7: Input Partition Algorithm}
