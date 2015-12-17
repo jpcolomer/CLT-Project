@@ -1,3 +1,5 @@
+% TODO: Rename H to C
+
 In this section, we will present a set of algorithms that, by combining KWIK
 learners, are able to learn a more complex concept class. \\
 
@@ -47,12 +49,12 @@ $$ B(\varepsilon, \delta) = (k - 1) + \sum_{i = 1}^k B_i(\varepsilon, \delta) $$
 Let:
 \begin{itemize}
   \item $X = Y = \mathbb{R}$
-  \item $H_1 = \{ f \ | \ f(x) =|x - c|, c \in \mathbb{R} \}$ KWIK learnable by $A_1_$
+  \item $H_1 = \{ f \ | \ f(x) =|x - c|, c \in \mathbb{R} \}$ KWIK learnable by $A_1$
   \item $H_2 = \{ f \ | \ f(x) = mx + b, m \in \mathbb{R}, b \in \mathbb{R} \}$ KWIK learnable by $A_2$
   \item $H = H_1 \cup H_2$
 \end{itemize}
 
-$H_1$ can be learned using a 1 dimension version of Planar-distance Algorithm (Algorithm 3) with a 
+$H_1$ can be learned using a 1 dimension version of Planar-distance Algorithm (Algorithm 3) with a
 KWIK bound of 2. $H_2$ can be learned with a KWIK bound of $2$,
 the number of points needed to define a line.
 $H$ is KWIK learnable using the union algorithm.
@@ -74,4 +76,35 @@ $H$ is KWIK learnable using the union algorithm.
     From now on the algorithm will predict all the examples using $A_1$.
 \end{enumerate}
 
-\paragraph{Algorithm 7: Input Partition Algorithm}
+\paragraph{Algorithm 7: Input-Partition Algorithm}
+Let:
+\begin{itemize}
+  \item $X = \bigcup_{i=1}^k X_i$, where all $X_i \cap X_j = \emptyset \forall i \neq j$
+  \item $H_i: X_i \to Y$ be a KWIK-learnable concept class by an algorithm $A_i$
+  with KWIK bound of $B_i(\varepsilon, \delta)$ for $1 \leq i \leq k$. Note
+  that all $H_1, \ldots, H_k$ share the same output space but their input spaces
+  are disjoint.
+  \item $H \subseteq X \to Y$ be a concept class.
+\end{itemize}
+
+The input-partition algorithm KWIK-learns $H$ with KWIK bound $B(\varepsilon,
+\delta) = \sum_{i=1}^k B_i(\varepsilon, \delta/k)$. \\
+
+When the algorithm receives an $x \in X_i$, it calls $A_i$ with parameters
+$\varepsilon$ and $\delta/k$ and returns its response. By definition of $A_i$,
+its response will be $\varepsilon$-accurate with probability at least $1 -
+\delta/k$. Using union bounds, we know that the response over all $X$ of the
+algorithm will be $\varepsilon$-accurate with probability at least $1 - \delta$.
+Given that $X$ is the union of $k$ disjoint input spaces, the KWIK bound
+of the input-partition algorithm will be $B(\varepsilon, \delta) = \sum_{i=1}^k
+= (\varepsilon, \delta/k)$.
+
+\paragraph{Example 3} Let $G$ be a Markov Decision Process consisting of $n$
+states and $m$ actions. There are $n^2m$ transitions represented as triplets of
+the form $(state_{origin}, action, state_{target})$. We want to learn the
+probability of each transition to happen. By receiving Bernoulli observations,
+we can KWIK-learn this using algorithm 7 (Input-Partition Algorithm) which
+uses algorithm 4 (Coin-Learning Algorithm) as its $A_i$ for every $1 \leq i \leq
+n^2m$ with parameters $\varepsilon$ and $\frac{\delta}{n^2m}$. The KWIK bound of
+this algorithm is $B(\varepsilon, \delta) = n^2m \cdot O(\frac{1}{\varepsilon^2}
+\ln \frac{n^2m}{\delta}) = O(\frac{n^2m}{\varepsilon^2} \ln \frac{nm}{\delta})$.
