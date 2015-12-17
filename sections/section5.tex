@@ -110,7 +110,7 @@ this algorithm is $B(\varepsilon, \delta) = n^2m \cdot O(\frac{1}{\varepsilon^2}
 \ln \frac{n^2m}{\delta}) = O(\frac{n^2m}{\varepsilon^2} \ln \frac{nm}{\delta})$.
 
 \paragraph{Algorithm 8: Cross-Product Algorithm}
-Let
+Let:
 \begin{itemize}
   \item $H_i \subseteq X_i \to Y_i$ be a KWIK learnable concept class with bound $B_i(\varepsilon, \delta)$ by using algorithm $A_i$ for $1 \leq i \leq k$
   \item $X = X_1 \times \cdots \times X_k$ be an input space.
@@ -132,3 +132,13 @@ For each $x \in X$ received by the algorithm, it passes component $x_i$ to algor
 
 The result is $\varepsilon$ accurate in each component with probability greater than $1-\delta/k$. As a result, by union bounds the result is $\varepsilon$ accurate in all components with probability at least $1-\delta$.
 Since each subalgorithm will output at most $B_i(\varepsilon,\delta/k)$ $\bot$s, the algorithm's KWIK bound is $B(\varepsilon, \delta) = \sum^{k}_{i=1} B_i(\varepsilon,\delta/k)$.
+
+% TODO: \paragraph{Example 4}
+
+\paragraph{Algorithm 9}
+Let:
+\begin{itemize}
+  \item $X$ be an input space.
+  \item $Y = \{0, 1\}$ be an output space.
+  \item $H_i \subseteq X \to Y$ be a KWIK learnable concept class with bound $B_i(\varepsilon, \delta)$ by using algorithm $A_i$ for $1 \leq i \leq k$.
+\end{itemize}
