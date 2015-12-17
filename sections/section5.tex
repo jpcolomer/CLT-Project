@@ -87,8 +87,8 @@ Let:
   \item $H \subseteq X \to Y$ be a concept class.
 \end{itemize}
 
-The input-partition algorithm KWIK-learns $H$ with KWIK bound $B(\varepsilon,
-\delta) = \sum_{i=1}^k B_i(\varepsilon, \delta/k)$. \\
+The input-partition algorithm KWIK-learns $H$ with KWIK bound $$B(\varepsilon,
+\delta) = \sum_{i=1}^k B_i(\varepsilon, \delta/k)$$. \\
 
 When the algorithm receives an $x \in X_i$, it calls $A_i$ with parameters
 $\varepsilon$ and $\delta/k$ and returns its response. By definition of $A_i$,
@@ -112,6 +112,23 @@ this algorithm is $B(\varepsilon, \delta) = n^2m \cdot O(\frac{1}{\varepsilon^2}
 \paragraph{Algorithm 8: Cross-Product Algorithm}
 Let
 \begin{itemize}
-  \item $H_i \subseteq X_i \to Y_i$ be a KWIK learnable concept class with bound $B_i(\varepsilon, \delta)$
+  \item $H_i \subseteq X_i \to Y_i$ be a KWIK learnable concept class with bound $B_i(\varepsilon, \delta)$ by using algorithm $A_i$ for $1 \leq i \leq k$
+  \item $X = X_1 \times \cdots \times X_k$ be an input space.
+  \item $Y = Y_1 \times \cdots \times Y_k$ be an output space.
+  \item $H \subseteq X \to Y$
 \end{itemize}
 
+$H$ can be KWIK-learned by using cross-product algorithm with KWIK bound of $B(\varepsilon,\delta) =  \sum^{k}_{i=1}B_i(\varepsilon,\delta/k)$ \\
+
+Each input $x$ received by the algorithm can be understood as a vector $[x_1,\ldots,x_k]$ with $x_i \in X_i$ and an output $y = [y_1, \ldots, y_k]$ with $y_i \in Y_i$. Therefore, the $i$-th component can be learned independently by using $A_i$
+with parameters $\varepsilon, \delta/k$.
+
+For each $x \in X$ received by the algorithm, it passes component $x_i$ to algorithm $A_i$, for $1 \leq i \leq k$. Each subalgorithm returns a label $\hat{y}_i \in Y_i \cup \{\bot\}$ for $x_i$.
+\begin{itemize}
+  \item  If any component returns $\bot$, the algorithm returns $\bot$ and receives the correct label $y$.
+    Then it passes $y_j$ to $A_j$ that has returned $\bot$.
+  \item Otherwise, the algorithm returns $\hat{y} = [\hat{y}_1, \ldots, \hat{y}_k]$
+\end{itemize}
+
+The result is $\varepsilon$ accurate in each component with probability greater than $1-\delta/k$. As a result, by union bounds the result is $\varepsilon$ accurate in all components with probability at least $1-\delta$.
+Since each subalgorithm will output at most $B_i(\varepsilon,\delta/k)$ $\bot$s, the algorithm's KWIK bound is $B(\varepsilon, \delta) = \sum^{k}_{i=1} B_i(\varepsilon,\delta/k)$.
