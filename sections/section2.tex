@@ -1,1 +1,28 @@
-two
+%sample space $X$
+%output space $Y$
+%concept class $C$
+%hypothesis class $H$
+%target concept $c$
+%hypothesis $h$
+%$H \subseteq (X \to Y)$
+%$c \in C$
+%$h \in H$
+%$C = H$ (proper)
+Let $c: X \rightarrow Y$ be a concept that belongs to a concept class $C$ known by the algorithm.
+A KWIK algorithm is an algorithm that learns $c$ given examples from $X$ labeled by $c(x) \in Y$. The output of the algorithm is a hypothesis $h \in H$ with $H$ the hypothesis class that is known by the algorithm.
+
+KWIK assumes that $H=C$.
+
+A KWIK algorithm is an algorithm that, given a concept class $C$, parameters $(\varepsilon, \delta)$,  receives examples $x \in X$ that have been labeled by a target concept $c \in C$, it learns $c$.
+
+A run for a KWIK algorithm works as follows.
+\begin{enumerate}
+  \item Receives an example $x \in X$
+  \item Predicts $\hat{y} \in Y \cup \{\bot\}$
+    \begin{itemize}
+      \item If $\hat{y} \neq \bot$ and $|\hat{y} - c(x)| \leq \varepsilon$ it outputs $\hat{y}$. Otherwise, if $|\hat{y} - c(x)| > \varepsilon$ the algorithm failed.
+      \item If $\hat{y} = \bot$ the algorithm updates the hypothesis using $c(x)$.
+    \end{itemize}
+\end{enumerate}
+
+The probability of having a failed run must be upper bounded by $\delta$. Additionally, the total number of $\bot$ responses is upper bounded by $B(\varepsilon,\delta)=\text{poly}(1/\varepsilon,1/\delta)$.
