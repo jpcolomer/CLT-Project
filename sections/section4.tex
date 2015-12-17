@@ -1,0 +1,114 @@
+In this section we will describe some concept classes that can be learned under
+the KWIK model.
+
+\paragraph{Algorithm 1: Memorization Algorithm}
+Given a finite input space $X$ and noise-free observations, any concept class
+can be learned under the KWIK model with a KWIK bound of $|X|$ by using the
+memorization algorithm. Which, for every received example $x \in X$:
+\begin{enumerate}
+  \item If it is the first time it receives $x$, the algorithm outputs $\bot$,
+  receives the correct label of $x$, and memorizes it.
+  \item If it is not the first time it receives $x$, the algorithm has already
+  memorized its correct label, so it outputs it.
+\end{enumerate}
+
+This algorithm will output $\bot$ at most once per example, because it is
+impossible to see an example twice for the first time. Therefore, the KWIK bound
+of the memorization algorithm is $|X|$. \\
+
+\paragraph{Algorithm 2: Enumeration Algorithm}
+Given any input space $X$ and noise-free observations, any finite concept class
+can be learned under the KWIK model with a KWIK bound of $|C| - 1$ by using the
+elimination algorithm. The elimination algorithm maintains a set of ``potential
+target concepts'' $\hat{H}$, initialized as $C$. For every received example
+$x \in X$, It creates a set $\hat{L} = \{ h(x) | h \in \hat{H} \}$ and:
+\begin{enumerate}
+  \item If $|\hat{L}| > 1$, it outputs $\bot$ because at least 2 hypotheses
+  disagree in labeling $x$. When the correct label of $x$ is received, it
+  updates $\hat{H}$ by eliminating from it all the hypotheses that
+  misclassified $x$.
+  \item If $|\hat{L}| = 1$, it outputs the element in $\hat{L}$.
+  \item If $|\hat{L}| = 0$, it means that the target concept in use is not in
+  the concept class being learned. This should never happen.
+\end{enumerate}
+
+For every $\bot$ that the algorithm returns, it will eliminate at least one
+concept from $\hat{H}$. Initially, $|\hat{H}| = |C|$. If the target
+concept belongs to $C$, at the end of its execution, the algorithm will have
+eliminated $|C| - 1$ concepts from $\hat{H}$. Therefore, the maximum number
+of $\bot$s that the algorithm will output is $|C| - 1$.
+
+\paragraph{Example 1:} The PhD lounge is frequented by a set $S$ of $n$ CLT
+students. Every two weeks, a subset of them $G \subseteq S$ meets there to work
+together on an assignment from the class. One of the students $f \in S$ is an
+expert in slowing down the entire group, and whenever he is in the PhD lounge
+($f \in G$), all the students in $G$ are forced to ``pull an all-nighter''.
+Fortunately, there is another student $p \in S$ who is a genius, and, whenever
+he is in the PhD lounge ($p \in G$), everyone is able to finish on time and go
+home early, independently on the presence/absence of $f$. Rocco heard about the
+story, and he wants to predict whether a subset of the students will ``pull an
+all-nighter'' or not. However, he doesn't know the identity of $f$ and $p$. \\
+
+The input space $X$ is all the possible subsets of $S$ ($|X| = 2^n$). Moreover,
+the concept class to learn are all the possible assignments of $p$ and $f$
+($|C| = n(n - 1)$). Therefore:
+\begin{itemize}
+  \item The memorization algorithm would achieve a KWIK bound of $2^n$.
+  \item The enumeration algorithm would achieve a KWIK bound of $n(n - 1) - 1$.
+\end{itemize}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/algorithm3.pdf}
+  \label{fig:sec4.1}
+  \caption{Planar-distance Algorithm \textcolor{red}{por ahora}}
+\end{figure}
+
+\paragraph{Algorithm 3: Planar-distance Algorithm}
+The two algorithms described above are limited to learning a finite concept
+class $C$ or receiving a finite input space $X$. In this algorithm, this
+restriction doesn't exist. \\
+
+Let:
+\begin{itemize}
+  \item $ X = \mathbb{R}^2 $
+  \item $ Y = \mathbb{R} $
+  \item $ C = \{ f \ | \ f : X \to Y, \hat{x} \in \mathbb{R}^2, f(x) = \norm{x - \hat{x}}_2 \} $
+\end{itemize}
+
+There is an unknown point $\overline{x}$ and the target concept $c(x)$ outputs
+the distance between an example $x$ and point $\overline{x}$. \\
+\begin{enumerate}
+  \item For an initial input $x_1$, the algorithm outputs $\bot$ and it receives
+  the output $y_1$. Now, the algorithm knows that $\overline{x}$ is in the
+  circumference $c_1$, with radius $y_1$ centered at $x_1$.
+  \item When the algorithm receives the second example $x_2$:
+  \begin{itemize}
+    \item If $x_2 = x_1$, it returns $y_1$.
+    \item Otherwise, it returns $\bot$ and receives the output $y_2$. Similarly,
+    the algorithm knows that $\overline{x}$ lies in the circumference $c_2$ with
+    radius $y_2$ centered at $x_2$. Then, $\overline{x}$ is restricted to one of
+    the two intersecting points ($i_1$ and $i_2$) of $c_1$ and $c_2$, as illustrated in Figure
+    \ref{fig:sec4.1} (b). At this point, if $c_1$ and $c_2$ are tangent, $i_1 =
+    i_2 = \overline{x}$.
+  \end{itemize}
+  \item When the algorithm receives the third example $x_3$:
+  \begin{itemize}
+    \item If $x_3$ is collinear with $x_1$ and $x_2$, then, $\norm{x_3 - i_1} =
+    \norm{x_3 - i_2}$. So, it returns $\norm{x_3 - i_1}$.
+    \item If it is not collinear, then it returns $\bot$ and receives the output
+    $y_3$. Similarly, the algorithm knows that $\overline{x}$ lies in the
+    circumference $c_3$ with radius $y_3$ centered at $x_3$. Now, circumferences
+    $c_1$, $c_2$ and $c_3$ only have one intersecting point, which is
+    $\overline{x}$.
+  \end{itemize}
+\end{enumerate}
+
+We just showed that, for any input set, the algorithm will completely identify
+$\overline{x}$ by outputting at most $3 \bot$s. Therefore, the KWIK bound of the
+planar-distance algorithm is $3$. As we saw in the case of $x_3$ being collinear
+with $x_1$ and $x_2$, there are instances in which a KWIK algorithm can
+have enough information for returning valid answers before having learned the
+target concept.
+
+

@@ -8,6 +8,7 @@
 \RequirePackage{graphicx}
 \RequirePackage{tikz}
 \RequirePackage{enumitem}
+\RequirePackage{hyperref}
 % \RequirePackage{pstricks}
 % \RequirePackage{pst-node}
 \RequirePackage[margin=1.2in]{geometry}
@@ -34,6 +35,7 @@
 \newcommand{\studuniA}[1]{\gdef\@studuniA{#1}}
 \newcommand{\studuniB}[1]{\gdef\@studuniB{#1}}
 \newcommand{\coursename}[1]{\gdef\@coursename{#1}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 
 \let\Oldmaketitle\maketitle
 \renewcommand{\maketitle}
