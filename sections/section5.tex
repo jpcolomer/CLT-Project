@@ -1,0 +1,46 @@
+In this section, we will present a set of algorithms that, by combining KWIK
+learners, are able to learn a more complex concept class. \\
+
+\paragraph{Algorithm 6: Union Algorithm}
+Let $H_i: X \to Y$ be a KWIK-learnable concept class by an algorithm $A_i$
+with KWIK bound of $B_i(\varepsilon, \delta)$ for $1 \leq i \leq k$. Note that
+all $H_1, \ldots, H_k$ share the same input and output spaces. \\
+
+The union algorithm learns $H = \bigcup_i H_i$ with KWIK bound $B(\varepsilon,
+\delta) = (k - 1) + \sum_{i = 1}^k B_i(\varepsilon, \delta)$. This can be
+understood as a generalization of the Enumeration Algorithm (Algorithm 2). \\
+
+The union algorithm maintains a set of ``potential algorithms'' $\hat{A}$,
+initialized as $\{ A_1, \ldots, A_k \}$. For every received example
+$x \in X$, it runs all algorithms in $\hat{A}$ to obtain a prediction from each
+of them $\hat{y}_i$. It creates a set $\hat{L} = \{ \hat{y}_i | A_i \in \hat{A} \}$:
+\begin{enumerate}
+  \item If $\bot \in \hat{L}$, at least one of the algorithms doesn't know the
+  answer with enough accuracy, then the union algorithm outputs $\bot$ and, once
+  the correct label is received, it passes it to each of the algorithms that
+  returned $\bot$.
+  \item If $|\hat{L}| > 1$, at least two algorithms disagree on labeling $x$.
+  Then, the union algorithm outputs $\bot$. Once the correct label $y$ is
+  received, it eliminates from $\hat{A}$ the algorithms for which $\hat{y}_i(x)
+  \neq y$.
+  \item Otherwise, $|hat{L}| = 1$. This means that all the algorithms in
+  $\hat{A}$ agree on labeling $x$. The union algorithm outputs the label in
+  $\hat{L}$.
+\end{enumerate}
+
+The algorithm will only output $\bot$ in the first or second cases described
+above:
+\begin{itemize}
+  \item In the first case, the algorithm will output at most $\sum_{i = 1}^k
+  B_i(\varepsilon, \delta)$.
+  \item In the second case, the union algorithm is going to eliminate at least one
+  algorithm from $\hat{A}$. Initially, $|\hat{A}| = k$, so the algorithm will
+  output $\bot$ at most $k - 1$ times and eliminates $k - 1$ algorithms from
+  $\hat{A}$.
+\end{itemize}
+
+In total, the KWIK bound of the union algorithm is the sum of both cases:
+$$ B(\varepsilon, \delta) = (k - 1) + \sum_{i = 1}^k B_i(\varepsilon, \delta) $$
+
+
+\paragraph{Algorithm 7: }
