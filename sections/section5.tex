@@ -135,10 +135,89 @@ Since each subalgorithm will output at most $B_i(\varepsilon,\delta/k)$ $\bot$s,
 
 % TODO: \paragraph{Example 4}
 
-\paragraph{Algorithm 9}
+\paragraph{Algorithm 9: Noisy Union Algorithm}
 Let:
 \begin{itemize}
-  \item $X$ be an input space.
-  \item $Y = \{0, 1\}$ be an output space.
-  \item $H_i \subseteq X \to Y$ be a KWIK learnable concept class with bound $B_i(\varepsilon, \delta)$ by using algorithm $A_i$ for $1 \leq i \leq k$.
+  \item $X$ be the input space.
+  \item $Y = [0, 1]$ be the output space.
+  \item $Z = \{0, 1\}$ be the observation space.
+  \item $H_i \subseteq X \to Y$ be a KWIK learnable concept class with bound
+  $B_i(\varepsilon, \delta)$ by using algorithm $A_i$ for $1 \leq i \leq k$.
+  \item $H = \bigcup_{i=0}^k H_i$
 \end{itemize}
+
+In this algorithm, the paper uses a definition of noise different from the one
+we used in class. Here, in the noisy world, an algorithm receives observations
+$z \in Z$, where $Pr[z = 1] = y$ and $Pr[z = 0] = 1 - y$. The algorithm wants
+to learn $y$. \\
+
+The noisy union algorithm can KWIK-learn $H$ with KWIK bound
+$$B(\varepsilon, \delta) = O\left( \frac{k}{\varepsilon^2} \ln \frac{k}{\delta}
+\right) + \sum_{i=1}^k B_i \left( \frac{\varepsilon}{4}, \frac{\delta}{k + 1}
+\right)$$
+
+For simplicity, we will only consider the case where $k = 2$, which can be
+extended to the general case. For trial $t$, when the algorithm receives $x_t$,
+it runs subalgorithms $A_1$ and $A_2$ with parameters $\varepsilon/4$ and
+$\delta/3$. Let $\hat{L} = \{\hat{y}_{t1}, \hat{y}_{t2}\}$ be the set containing
+both responses.
+\begin{itemize}
+  \item If $\bot \in \hat{L}$, the algorithm returns $\bot$ and obtains the
+  observation $z_t$ and sends it to all the subalgorithms that returned $\bot$
+  so that they can learn.
+  \item If $\bot \notin \hat{L}$ we will consider two cases:
+  \begin{itemize}
+    \item If $|\hat{y}_{t1} - \hat{y}_{t2}| \leq \varepsilon$, then both predictions
+    are close enough. Let $\hat{p}_t = (\hat{y}_{t1} + \hat{y}_{t2})/2 $. Then,
+    with probability at least $1 - \delta/3$, $|\hat{p}_t - y_t| \leq \varepsilon$:
+    \begin{align*}
+    |\hat{p}_t - y_t| &= |\hat{p}_t - y_{t1} + y_{t1} - y_t| \\
+    |\hat{p}_t - y_t| &\leq |\hat{p}_t - y_{t1}| + |y_{t1} - y_t| \\
+                      &\leq |(\hat{y}_{t1} + \hat{y}_{t2})/2 - y_{t1}| + |y_{t1} - y_t| \\
+                      &\leq |(\hat{y}_{t2} - \hat{y}_{t1})/2| + |y_{t1} - y_t| \\
+                      &\leq |(\hat{y}_{t2} - \hat{y}_{t1})|/2 + |y_{t1} - y_t| \\
+                      &\leq \underbrace{|(\hat{y}_{t2} - \hat{y}_{t1})|/2}_{\leq \varepsilon/2} + \underbrace{|y_{t1} - y_t|}_{\leq \varepsilon/4} \\
+                      &\leq \varepsilon/2 + \varepsilon/4 \\
+                      &\leq 3\varepsilon/4 \\
+                      &\leq \varepsilon \\
+    \end{align*}
+    \item If $|\hat{y}_{t1} - \hat{y}_{t2}| > \varepsilon$ (both predictions
+    are not close enough) the algorithm ``doesn't know'' an accurate-enough
+    prediction, so it returns $\bot$ and needs to know which of the algorithms
+    was wrong. However, differently from the noise-free union algorithm, it
+    can't eliminate any of the algorithms on the basis of a single observation.
+    Instead, it needs to observe this same behavior enough number of times to
+    identify the wrong one. For that, it keeps track of $l_i = \sum_{t \in I}
+    (\hat{y}_{ti} - z_t)$ for $i \in \{1, 2\}$ and $I = \{t | \ |\hat{y}_{t1} -
+    \hat{y}_{t2}| > \varepsilon\}$. If $|I| \geq
+    \frac{8}{\varepsilon^2} \ln \frac{3}{\delta} = O\left( \frac{1}{\varepsilon^2}
+    \ln \frac{1}{\delta} \right)$, then the algorithm eliminates the subalgorithm
+    whose $l_i$ is higher.
+  \end{itemize}
+\end{itemize}
+
+Given that each of the subalgorithms gives an $\varepsilon/4$-accurate hypothesis
+with probability at least $1 - \delta/3$ and the elimination of the ``bad''
+algorithm also succeeds with probability at least $1 - \delta/3$, then, by union
+bounds, the overall algorithm gives an $\varepsilon$-accurate hypothesis with
+probability at least $1 - \delta$. \\
+
+The algorithm outputs $\bot$ when:
+\begin{enumerate}
+  \item One of the subalgorithms reports $\bot$, which happens at most
+  $\sum_{i = 1}^2 B_i(\varepsilon/4, \delta/3)$ times.
+  \item Both algorithms' predictions are not close enough, which happens at most
+  $|I| = O\left( \frac{1}{\varepsilon^2} \ln \frac{1}{\delta} \right)$ times.
+\end{enumerate}
+Overall, the algorithm's KWIK bound is:
+$$B(\varepsilon, \delta) = O\left( \frac{1}{\varepsilon^2} \ln \frac{1}{\delta}
+\right) + \sum_{i = 1}^2 B_i\left(\frac{\varepsilon}{4}, \frac{\delta}{3}\right)$$
+
+The general case where $k > 2$ can be reduced to the case of 2 subalgorithms
+described above, running it once for each of the ${k \choose 2}$ pairs. Each
+of this runs passes parameters $\frac{\varepsilon}{4}$ and $\frac{\delta}{k+1}$
+to the two subalgorithms, obtaining a KWIK bound of:
+$$B(\varepsilon, \delta) = O\left( \frac{k}{\varepsilon^2} \ln \frac{k}{\delta}
+\right) + \sum_{i=1}^k B_i \left( \frac{\varepsilon}{4}, \frac{\delta}{k + 1}
+\right)$$
+
