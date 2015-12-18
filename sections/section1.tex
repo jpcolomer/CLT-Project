@@ -1,15 +1,16 @@
 The paper we studied is ``Knows What It Knows: A Framework For Self-Aware Learning''\cite{KWIK}.
 This paper introduces a new learning framework called KWIK (Know What It Knows) that has some common elements with 
-the learning frameworks covered in the course, PAC and OLMB.\\
+the learning frameworks covered in the course: PAC and OLMB.\\
 
-This learning framework outputs a label only when it has certainty that is the correct label for the input given. Otherwise, it outputs
+A KWIK algorithm returns a prediction only when it has certainty that is the correct output for the given input. Otherwise, it outputs
 ``I don't know`` ($\bot$). Additionally, there is a polynomial upper bound on the number of times a KWIK algorithm outputs $\bot$.\\
 
-KWIK was motivated by the idea of distinguishing instances that have been learned with high accuracy from the others. \\
+KWIK was motivated by the idea of distinguishing predictions that have been learned with high accuracy from the others. \\
 
-The structure of this document will be the following:
+The structure of this document is the following:
 \begin{itemize}
-  \item Section 2 provides a formal definition of the KWIK model. 
-  \item Section 3 clarifies the definition of KWIK by using an example.
-  \item Section 4 shows a set of concept classes that can be learned by a KWIK model.
+  \item Section 2 provides a definition of the KWIK model.
+  \item Section 3 motivates the study of KWIK models by using an example.
+  \item Section 4 shows a set of concept classes that can be KWIK-learned.
+  \item Section 5 shows different ways of combining KWIK algorithms in order to learn a more complex concept class
 \end{itemize}

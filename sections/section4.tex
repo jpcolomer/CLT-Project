@@ -6,8 +6,8 @@ Given a finite input space $X$ and noise-free observations, any concept class
 can be learned under the KWIK model with a KWIK bound of $|X|$ by using the
 memorization algorithm. Which, for every received example $x \in X$:
 \begin{enumerate}
-  \item If it is the first time it receives $x$, the algorithm outputs $\bot$,
-  receives the correct label of $x$, and memorizes it.
+  \item If it is the first time it receives $x$, the algorithm returns $\bot$,
+  receives the correct output of $x$, and memorizes it.
   \item If it is not the first time it receives $x$, the algorithm has already
   memorized its correct label, so it outputs it.
 \end{enumerate}
@@ -17,19 +17,19 @@ impossible to see an example twice for the first time. Therefore, the KWIK bound
 of the memorization algorithm is $|X|$. \\
 
 \paragraph{Algorithm 2: Enumeration Algorithm}
-Given any input space $X$ and noise-free observations, any finite concept class
+Given any input space $X$ and noise-free observations, any finite concept class $C \subseteq X \to Y$
 can be learned under the KWIK model with a KWIK bound of $|C| - 1$ by using the
 elimination algorithm. The elimination algorithm maintains a set of ``potential
 target concepts'' $\hat{H}$, initialized as $C$. For every received example
-$x \in X$, It creates a set $\hat{L} = \{ h(x) | h \in \hat{H} \}$ and:
+$x \in X$, it creates a set $\hat{L} = \{ h(x) | h \in \hat{H} \}$ and:
 \begin{enumerate}
   \item If $|\hat{L}| > 1$, it outputs $\bot$ because at least 2 hypotheses
-  disagree in labeling $x$. When the correct label of $x$ is received, it
+  disagree in predicting the output for $x$. When the correct output of $x$ is received, it
   updates $\hat{H}$ by eliminating from it all the hypotheses that
-  misclassified $x$.
+  incorrectly predicted the output for $x$.
   \item If $|\hat{L}| = 1$, it outputs the element in $\hat{L}$.
-  \item If $|\hat{L}| = 0$, it means that the target concept in use is not in
-  the concept class being learned. This should never happen.
+  \item If $|\hat{L}| = 0$, it means that the target concept is not in
+  the concept class being learned.
 \end{enumerate}
 
 For every $\bot$ that the algorithm returns, it will eliminate at least one
@@ -39,7 +39,7 @@ eliminated $|C| - 1$ concepts from $\hat{H}$. Therefore, the maximum number
 of $\bot$s that the algorithm will output is $|C| - 1$.
 
 \paragraph{Example 1:} The PhD lounge is frequented by a set $S$ of $n$ CLT
-students. Every two weeks, a subset of them $G \subseteq S$ meets there to work
+students. Every two weeks, any subset of them $G \subseteq S$ meets there to work
 together on an assignment from the class. One of the students $f \in S$ is an
 expert in slowing down the entire group, and whenever he is in the PhD lounge
 ($f \in G$), all the students in $G$ are forced to ``pull an all-nighter''.
@@ -60,8 +60,8 @@ the concept class to learn are all the possible assignments of $p$ and $f$
 \begin{figure}
   \centering
   \includegraphics[width=0.5\textwidth]{figures/algorithm3.pdf}
+  \caption{Visualization of an execution of planar-distance Algorithm}
   \label{fig:sec4.1}
-  \caption{Planar-distance Algorithm \textcolor{red}{por ahora}}
 \end{figure}
 
 \paragraph{Algorithm 3: Planar-distance Algorithm}
@@ -73,14 +73,14 @@ Let:
 \begin{itemize}
   \item $ X = \mathbb{R}^2 $
   \item $ Y = \mathbb{R} $
-  \item $ C = \{ f \ | \ f : X \to Y, \hat{x} \in \mathbb{R}^2, f(x) = \norm{x - \hat{x}}_2 \} $
+  \item $ C = \{ f \ | \ f : X \to Y, \overline{x} \in \mathbb{R}^2, f(x) = \norm{x - \overline{x}} \} $
 \end{itemize}
 
-There is an unknown point $\overline{x}$ and the target concept $c(x)$ outputs
+There is a point $\overline{x}$ unknown to the algorithm.  The target concept $c(x)$ fixes $\overline{x}$ and it outputs
 the distance between an example $x$ and point $\overline{x}$. \\
 \begin{enumerate}
-  \item For an initial input $x_1$, the algorithm outputs $\bot$ and it receives
-  the output $y_1$. Now, the algorithm knows that $\overline{x}$ is in the
+  \item For an initial input $x_1$, the algorithm returns $\bot$ and it receives
+  the distance $y_1$. Now, the algorithm knows that $\overline{x}$ is in the
   circumference $c_1$, with radius $y_1$ centered at $x_1$.
   \item When the algorithm receives the second example $x_2$:
   \begin{itemize}
@@ -105,7 +105,7 @@ the distance between an example $x$ and point $\overline{x}$. \\
 \end{enumerate}
 
 We just showed that, for any input set, the algorithm will completely identify
-$\overline{x}$ by outputting at most $3 \bot$s. Therefore, the KWIK bound of the
+$\overline{x}$ by outputting at most $3$ $\bot$s. Therefore, the KWIK bound of the
 planar-distance algorithm is $3$. As we saw in the case of $x_3$ being collinear
 with $x_1$ and $x_2$, there are instances in which a KWIK algorithm can
 have enough information for returning valid answers before having learned the
@@ -115,11 +115,11 @@ target concept.
 We will now consider a simple KWIK algorithm which learns the probability of a
 biased coin to come up heads. This algorithm will receive Bernoulli observations
 ($0$ when the coin comes up tails and $1$ when it comes up heads) and, with a
-KWIK bound of $B(\varepsilon, \delta) = O(frac{1}{\varepsilon^2}\log \frac{1}{\delta})$, it learns the
-bias $p$ of the coin with $\varepsilon$-accuracy with probability at least $1-\delta$.
+KWIK bound of $B(\varepsilon, \delta) = O(\frac{1}{\varepsilon^2}\log \frac{1}{\delta})$, it learns the
+bias $p$ of the coin with $\varepsilon$-accuracy with probability at least $1-\delta$. \\
 
 Let $\hat{p}$ be the estimate of $p$ made by the algorithm. It wants to estimate
-the probability so that $|\hat{p} - p| \leq \varepsilon$.
+the probability so that $|\hat{p} - p| \leq \varepsilon$. \\
 
 
 Let $T$ be the number of observations it needs in order to satisfy the $\varepsilon$ and $\delta$ requirements.

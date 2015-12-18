@@ -1,14 +1,14 @@
 % TODO: Rename H to C
 
 In this section, we will present a set of algorithms that, by combining KWIK
-learners, are able to learn a more complex concept class. \\
+learners, are able to learn a more complex concept class.
 
 \paragraph{Algorithm 6: Union Algorithm}
 Let $H_i: X \to Y$ be a KWIK-learnable concept class by an algorithm $A_i$
 with KWIK bound of $B_i(\varepsilon, \delta)$ for $1 \leq i \leq k$. Note that
 all $H_1, \ldots, H_k$ share the same input and output spaces. \\
 
-The union algorithm learns $H = \bigcup_i H_i$ with KWIK bound $B(\varepsilon,
+The union algorithm learns $H = \bigcup_{i=1}^k H_i$ with KWIK bound $B(\varepsilon,
 \delta) = (k - 1) + \sum_{i = 1}^k B_i(\varepsilon, \delta)$. This can be
 understood as a generalization of the Enumeration Algorithm (Algorithm 2). \\
 
@@ -19,22 +19,22 @@ of them $\hat{y}_i$. It creates a set $\hat{L} = \{ \hat{y}_i | A_i \in \hat{A} 
 \begin{enumerate}
   \item If $\bot \in \hat{L}$, at least one of the algorithms doesn't know the
   answer with enough accuracy, then the union algorithm outputs $\bot$ and, once
-  the correct label is received, it passes it to each of the algorithms that
+  the correct output is received, it passes it to each of the algorithms that
   returned $\bot$.
-  \item If $|\hat{L}| > 1$, at least two algorithms disagree on labeling $x$.
-  Then, the union algorithm outputs $\bot$. Once the correct label $y$ is
+  \item If $|\hat{L}| > 1$, at least two algorithms disagree on predicting the output of $x$.
+  Then, the union algorithm outputs $\bot$. Once the correct output $y$ is
   received, it eliminates from $\hat{A}$ the algorithms for which $\hat{y}_i(x)
   \neq y$.
-  \item Otherwise, $|hat{L}| = 1$. This means that all the algorithms in
-  $\hat{A}$ agree on labeling $x$. The union algorithm outputs the label in
+  \item Otherwise, $|\hat{L}| = 1$. This means that all the algorithms in
+  $\hat{A}$ agree on the prediction of the output of $x$. The union algorithm outputs the element in
   $\hat{L}$.
 \end{enumerate}
 
 The algorithm will only output $\bot$ in the first or second cases described
 above:
 \begin{itemize}
-  \item In the first case, the algorithm will output at most $\sum_{i = 1}^k
-  B_i(\varepsilon, \delta)$.
+  \item In the first case, the algorithm will return $\bot$ at most $\sum_{i = 1}^k
+  B_i(\varepsilon, \delta)$ times.
   \item In the second case, the union algorithm is going to eliminate at least one
   algorithm from $\hat{A}$. Initially, $|\hat{A}| = k$, so the algorithm will
   output $\bot$ at most $k - 1$ times and eliminates $k - 1$ algorithms from
@@ -60,7 +60,7 @@ the number of points needed to define a line.
 $H$ is KWIK learnable using the union algorithm.
 \begin{enumerate}
   \item Initially, $\hat{A} = \{A_1, A_2 \}$
-  \item First, the algorithm receives $x_1 = 2$. $\hat{L} = \{ \bot \}$ because none of the algorithms knows the answer. Then, it outputs $\bot$ and receives $y_1 = 2$, which it passes to $A_1$, $A_2$.
+  \item First, the algorithm receives $x_1 = 2$. $\hat{L} = \{ \bot \}$ because none of the algorithms know the answer. Then, it outputs $\bot$ and receives $y_1 = 2$, which it passes to $A_1$, $A_2$.
   \item The algorithm receives $x_2 = 8$. $A_1$ and $A_2$ still don't know the actual value. Therefore, $\hat{L} = \{ \bot \}$ and it outputs $\bot$. Afterwards, it receives and passes $y_2 = 4$ to $A_1$ and $A_2$.
     Since $A_1$ and $A_2$ have returned $\bot$ twice, they have learned an hypothesis for every $x \in \mathbb{R}$.
     \begin{itemize}
@@ -79,7 +79,7 @@ $H$ is KWIK learnable using the union algorithm.
 \paragraph{Algorithm 7: Input-Partition Algorithm}
 Let:
 \begin{itemize}
-  \item $X = \bigcup_{i=1}^k X_i$, where all $X_i \cap X_j = \emptyset \forall i \neq j$
+  \item $X = \bigcup_{i=1}^k X_i$, where all $X_i \cap X_j = \emptyset \ \forall i \neq j$
   \item $H_i: X_i \to Y$ be a KWIK-learnable concept class by an algorithm $A_i$
   with KWIK bound of $B_i(\varepsilon, \delta)$ for $1 \leq i \leq k$. Note
   that all $H_1, \ldots, H_k$ share the same output space but their input spaces
@@ -88,7 +88,7 @@ Let:
 \end{itemize}
 
 The input-partition algorithm KWIK-learns $H$ with KWIK bound $$B(\varepsilon,
-\delta) = \sum_{i=1}^k B_i(\varepsilon, \delta/k)$$. \\
+\delta) = \sum_{i=1}^k B_i(\varepsilon, \delta/k)$$
 
 When the algorithm receives an $x \in X_i$, it calls $A_i$ with parameters
 $\varepsilon$ and $\delta/k$ and returns its response. By definition of $A_i$,
@@ -97,7 +97,7 @@ its response will be $\varepsilon$-accurate with probability at least $1 -
 algorithm will be $\varepsilon$-accurate with probability at least $1 - \delta$.
 Given that $X$ is the union of $k$ disjoint input spaces, the KWIK bound
 of the input-partition algorithm will be $B(\varepsilon, \delta) = \sum_{i=1}^k
-= (\varepsilon, \delta/k)$.
+= B_i(\varepsilon, \delta/k)$.
 
 \paragraph{Example 3} Let $G$ be a Markov Decision Process consisting of $n$
 states and $m$ actions. There are $n^2m$ transitions represented as triplets of
@@ -106,8 +106,8 @@ probability of each transition to happen. By receiving Bernoulli observations,
 we can KWIK-learn this using algorithm 7 (Input-Partition Algorithm) which
 uses algorithm 4 (Coin-Learning Algorithm) as its $A_i$ for every $1 \leq i \leq
 n^2m$ with parameters $\varepsilon$ and $\frac{\delta}{n^2m}$. The KWIK bound of
-this algorithm is $B(\varepsilon, \delta) = n^2m \cdot O(\frac{1}{\varepsilon^2}
-\ln \frac{n^2m}{\delta}) = O(\frac{n^2m}{\varepsilon^2} \ln \frac{nm}{\delta})$.
+this algorithm is $$B(\varepsilon, \delta) = n^2m \cdot O\left(\frac{1}{\varepsilon^2}
+\ln \frac{n^2m}{\delta}\right) = O\left(\frac{n^2m}{\varepsilon^2} \ln \frac{nm}{\delta}\right)$$
 
 \paragraph{Algorithm 8: Cross-Product Algorithm}
 Let:
@@ -121,11 +121,11 @@ Let:
 $H$ can be KWIK-learned by using cross-product algorithm with KWIK bound of $B(\varepsilon,\delta) =  \sum^{k}_{i=1}B_i(\varepsilon,\delta/k)$ \\
 
 Each input $x$ received by the algorithm can be understood as a vector $[x_1,\ldots,x_k]$ with $x_i \in X_i$ and an output $y = [y_1, \ldots, y_k]$ with $y_i \in Y_i$. Therefore, the $i$-th component can be learned independently by using $A_i$
-with parameters $\varepsilon, \delta/k$.
+with parameters $\varepsilon, \delta/k$. \\
 
-For each $x \in X$ received by the algorithm, it passes component $x_i$ to algorithm $A_i$, for $1 \leq i \leq k$. Each subalgorithm returns a label $\hat{y}_i \in Y_i \cup \{\bot\}$ for $x_i$.
+For each $x \in X$ received by the algorithm, it passes component $x_i$ to algorithm $A_i$, for $1 \leq i \leq k$. Each subalgorithm returns a prediction $\hat{y}_i \in Y_i \cup \{\bot\}$ for $x_i$.
 \begin{itemize}
-  \item  If any component returns $\bot$, the algorithm returns $\bot$ and receives the correct label $y$.
+  \item  If any component returns $\bot$, the algorithm returns $\bot$ and receives the correct output $y$.
     Then it passes $y_j$ to $A_j$ that has returned $\bot$.
   \item Otherwise, the algorithm returns $\hat{y} = [\hat{y}_1, \ldots, \hat{y}_k]$
 \end{itemize}
@@ -143,7 +143,7 @@ Let:
   \item $Z = \{0, 1\}$ be the observation space.
   \item $H_i \subseteq X \to Y$ be a KWIK learnable concept class with bound
   $B_i(\varepsilon, \delta)$ by using algorithm $A_i$ for $1 \leq i \leq k$.
-  \item $H = \bigcup_{i=0}^k H_i$
+  \item $H = \bigcup_{i=1}^k H_i$
 \end{itemize}
 
 In this algorithm, the paper uses a definition of noise different from the one
@@ -171,12 +171,12 @@ both responses.
     are close enough. Let $\hat{p}_t = (\hat{y}_{t1} + \hat{y}_{t2})/2 $. Then,
     with probability at least $1 - \delta/3$, $|\hat{p}_t - y_t| \leq \varepsilon$:
     \begin{align*}
-    |\hat{p}_t - y_t| &= |\hat{p}_t - y_{t1} + y_{t1} - y_t| \\
-    |\hat{p}_t - y_t| &\leq |\hat{p}_t - y_{t1}| + |y_{t1} - y_t| \\
-                      &\leq |(\hat{y}_{t1} + \hat{y}_{t2})/2 - y_{t1}| + |y_{t1} - y_t| \\
-                      &\leq |(\hat{y}_{t2} - \hat{y}_{t1})/2| + |y_{t1} - y_t| \\
-                      &\leq |(\hat{y}_{t2} - \hat{y}_{t1})|/2 + |y_{t1} - y_t| \\
-                      &\leq \underbrace{|(\hat{y}_{t2} - \hat{y}_{t1})|/2}_{\leq \varepsilon/2} + \underbrace{|y_{t1} - y_t|}_{\leq \varepsilon/4} \\
+    |\hat{p}_t - y_t| &= |\hat{p}_t - \hat{y}_{t1} + \hat{y}_{t1} - y_t| \\
+    |\hat{p}_t - y_t| &\leq |\hat{p}_t - \hat{y}_{t1}| + |\hat{y}_{t1} - y_t| \\
+                      &\leq |(\hat{y}_{t1} + \hat{y}_{t2})/2 - \hat{y}_{t1}| + |\hat{y}_{t1} - y_t| \\
+                      &\leq |(\hat{y}_{t2} - \hat{y}_{t1})/2| + |\hat{y}_{t1} - y_t| \\
+                      &\leq |\hat{y}_{t2} - \hat{y}_{t1}|/2 + |\hat{y}_{t1} - y_t| \\
+                      &\leq \underbrace{|\hat{y}_{t2} - \hat{y}_{t1}|/2}_{\leq \varepsilon/2} + \underbrace{|y_{t1} - y_t|}_{\leq \varepsilon/4} \\
                       &\leq \varepsilon/2 + \varepsilon/4 \\
                       &\leq 3\varepsilon/4 \\
                       &\leq \varepsilon \\
@@ -196,13 +196,13 @@ both responses.
   \end{itemize}
 \end{itemize}
 
-Given that each of the subalgorithms gives an $\varepsilon/4$-accurate hypothesis
+Given that each of the subalgorithms outputs an $\varepsilon/4$-accurate hypothesis
 with probability at least $1 - \delta/3$ and the elimination of the ``bad''
 algorithm also succeeds with probability at least $1 - \delta/3$, then, by union
 bounds, the overall algorithm gives an $\varepsilon$-accurate hypothesis with
 probability at least $1 - \delta$. \\
 
-The algorithm outputs $\bot$ when:
+The algorithm returns $\bot$ when:
 \begin{enumerate}
   \item One of the subalgorithms reports $\bot$, which happens at most
   $\sum_{i = 1}^2 B_i(\varepsilon/4, \delta/3)$ times.
@@ -215,7 +215,7 @@ $$B(\varepsilon, \delta) = O\left( \frac{1}{\varepsilon^2} \ln \frac{1}{\delta}
 
 The general case where $k > 2$ can be reduced to the case of 2 subalgorithms
 described above, running it once for each of the ${k \choose 2}$ pairs. Each
-of this runs passes parameters $\frac{\varepsilon}{4}$ and $\frac{\delta}{k+1}$
+of these runs passes parameters $\frac{\varepsilon}{4}$ and $\frac{\delta}{k+1}$
 to the two subalgorithms, obtaining a KWIK bound of:
 $$B(\varepsilon, \delta) = O\left( \frac{k}{\varepsilon^2} \ln \frac{k}{\delta}
 \right) + \sum_{i=1}^k B_i \left( \frac{\varepsilon}{4}, \frac{\delta}{k + 1}

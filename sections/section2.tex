@@ -1,6 +1,15 @@
-A KWIK algorithm is an algorithm that, given a concept class $C$, parameters $(\varepsilon, \delta)$,  receives examples $x \in X$ that have been labeled by a target concept $c \in C$, it learns $c$.
+An algorithm $A$ KWIK-learns a concept class $C \subseteq X \to Y$ if:
+\begin{itemize}
+  \item For any target concept $c \in C$, unknown to $A$
+  \item For any $\varepsilon > 0$
+  \item For any $\delta > 0$
+\end{itemize}
 
-A run for a KWIK algorithm works as follows.
+If $A$ is given $\varepsilon$ and $\delta$, then with probability at least $1-\delta$ it outputs an
+hypothesis $h$ such that $|h(x) - c(x)| < \varepsilon$ for any $x \in X$. \\
+
+A KWIK learning session consists on a sequence of trials.
+A trial for a KWIK algorithm works as follows.
 \begin{enumerate}
   \item Receives an example $x \in X$
   \item Predicts $\hat{y} \in Y \cup \{\bot\}$
@@ -10,12 +19,12 @@ A run for a KWIK algorithm works as follows.
     \end{itemize}
 \end{enumerate}
 
-The probability of having a failed run must be upper bounded by $\delta$. Additionally, the total number of $\bot$ responses is upper bounded by $B(\varepsilon,\delta)=\text{poly}(1/\varepsilon,1/\delta)$.
+The probability of having a failed run must be upper bounded by $\delta$. Additionally, the total number of $\bot$ responses is upper bounded by $B(\varepsilon,\delta)=\text{poly}(1/\varepsilon,1/\delta)$. \\
 
 KWIK framework has similarities with both $PAC$ and $OLMB$ models.
 \begin{itemize}
   \item Similarly to PAC, KWIK algorithms must be $\varepsilon$-accurate with probability at least $1-\delta$. Nevertheless, inputs for the KWIK model come from an adversary instead of a distribution like in PAC.
-  \item In the same way KWIK relates to OLMB in the sense that inputs for both models are picked adversarially. However, instead of having a bound on the number of mistakes, KWIK has a bound on the number of $\bot$ outputs.
+  \item In the same way, KWIK relates to OLMB in the sense that inputs for both models are picked adversarially. However, instead of having a bound on the number of mistakes, KWIK has a bound on the number of $\bot$ outputs.
 \end{itemize}
 
 A KWIK algorithm can be easily converted into a OLMB algorithm by guessing a label instead of $\bot$. In this case, the resulting OLMB algorithm will have a mistake bound $B(\varepsilon,\delta)$.\\
